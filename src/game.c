@@ -147,7 +147,7 @@ void game_set_title(struct Game *g) {
 bool game_reset(struct Game *g) {
     g->mine_count = (int)((double)(g->rows * g->columns) * g->difficulty);
 
-    if (!board_reset(g->board, g->mine_count)) {
+    if (!board_reset(g->board, g->mine_count, true)) {
         return false;
     }
 

@@ -91,7 +91,7 @@ void game_free(struct Game **game) {
 bool game_reset(struct Game *g) {
     g->mine_count = (int)((double)(g->rows * g->columns) * g->difficulty);
 
-    if (!board_reset(g->board, g->mine_count)) {
+    if (!board_reset(g->board, g->mine_count, true)) {
         return false;
     }
 

@@ -33,7 +33,7 @@ bool board_new(struct Board **board, SDL_Renderer *renderer, unsigned rows,
 
     board_set_scale(b, b->scale);
 
-    if (!board_reset(b, b->mine_count)) {
+    if (!board_reset(b, b->mine_count, true)) {
         return false;
     }
 
@@ -121,18 +121,33 @@ void board_free_arrays(struct Board *b) {
     }
 }
 
-bool board_reset(struct Board *b, int mine_count) {
+bool board_reset(struct Board *b, int mine_count, bool full_reset) {
     b->mine_count = mine_count;
 
-    board_free_arrays(b);
+    if (full_reset) {
+        board_free_arrays(b);
 
-    if (!board_calloc_arrays(b)) {
-        return false;
+        if (!board_calloc_arrays(b)) {
+            return false;
+        }
+
+        for (unsigned r = 0; r < b->rows; r++) {
+            for (unsigned c = 0; c < b->columns; c++) {
+                b->front_array[r][c] = 9;
+            }
+        }
+    } else {
+        for (unsigned r = 0; r < b->rows; r++) {
+            for (unsigned c = 0; c < b->columns; c++) {
+                unsigned elem = b->front_array[r][c];
+                b->front_array[r][c] =
+                    ((elem == 10) || (elem == 11)) ? elem : 9;
+            }
+        }
     }
 
     for (unsigned r = 0; r < b->rows; r++) {
         for (unsigned c = 0; c < b->columns; c++) {
-            b->front_array[r][c] = 9;
             b->back_array[r][c] = 0;
         }
     }
@@ -330,7 +345,7 @@ bool board_mouse_up(struct Board *b, int x, int y, Uint8 button) {
                     board_check_won(b);
                 }
                 if (b->first_turn && b->game_status != 0) {
-                    if (!board_reset(b, b->mine_count)) {
+                    if (!board_reset(b, b->mine_count, false)) {
                         return false;
                     }
                 } else {
