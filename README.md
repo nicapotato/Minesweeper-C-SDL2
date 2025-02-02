@@ -12,12 +12,14 @@ git clone https://github.com/ProgrammingRainbow/Minesweeper-C-SDL2
 cd Minesweeper-C-SDL2
 make run
 ```
-The Makefile builds debug by default. It also supports these commands:
+The Makefile also supports these commands:
 ```
 make rebuild
 make clean
 make release
+make debug
 SRC_DIR=Video8 make rebuild run
+CC=clang make clean debug run
 ```
 # Controls
 1 through 8 - Change the theme of the game.\
