@@ -2,7 +2,7 @@
 #include "init_sdl.h"
 
 void game_set_scale(struct Game *g);
-void game_toggel_scale(struct Game *g);
+void game_toggle_scale(struct Game *g);
 void game_events(struct Game *g);
 void game_update(struct Game *g);
 void game_draw(const struct Game *g);
@@ -97,7 +97,7 @@ void game_set_scale(struct Game *g) {
                           SDL_WINDOWPOS_CENTERED);
 }
 
-void game_toggel_scale(struct Game *g) {
+void game_toggle_scale(struct Game *g) {
     g->scale = (g->scale == 1) ? 2 : (g->scale == 2) ? 3 : 1;
     game_set_scale(g);
 }

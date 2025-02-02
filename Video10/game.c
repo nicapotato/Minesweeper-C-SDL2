@@ -22,7 +22,7 @@ bool game_new(struct Game **game) {
     g->rows = 9;
     g->columns = 9;
     g->scale = 2;
-    g->mine_count = 7;
+    g->mine_count = 8;
 
     if (!game_init_sdl(g)) {
         return false;
