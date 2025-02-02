@@ -30,8 +30,8 @@ bool game_new(struct Game **game) {
     g->rows = 9;
     g->columns = 9;
     g->scale = 2;
-    g->mine_count = 7;
-    g->difficulty = 0.095;
+    g->mine_count = 8;
+    g->difficulty = 0.1;
 
     if (!game_init_sdl(g)) {
         return false;
@@ -335,15 +335,15 @@ bool game_events(struct Game *g) {
                 game_set_theme(g, 7);
                 break;
             case SDL_SCANCODE_A:
-                if (!game_set_difficulty(g, 0.095, "Easy"))
+                if (!game_set_difficulty(g, 0.1, "Easy"))
                     return false;
                 break;
             case SDL_SCANCODE_S:
-                if (!game_set_difficulty(g, 0.13, "Medium"))
+                if (!game_set_difficulty(g, 0.133, "Medium"))
                     return false;
                 break;
             case SDL_SCANCODE_D:
-                if (!game_set_difficulty(g, 0.165, "Hard"))
+                if (!game_set_difficulty(g, 0.166, "Hard"))
                     return false;
                 break;
             case SDL_SCANCODE_F:

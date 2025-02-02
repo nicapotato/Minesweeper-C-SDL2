@@ -36,7 +36,7 @@ struct Pos {
 bool board_new(struct Board **board, SDL_Renderer *renderer, unsigned rows,
                unsigned columns, int scale, int mine_count);
 void board_free(struct Board **board);
-bool board_reset(struct Board *b, int mine_count, bool full_reset);
+bool board_reset(struct Board *b, bool full_reset);
 int board_game_status(const struct Board *b);
 int board_mines_marked(const struct Board *b);
 bool board_is_pressed(const struct Board *b);

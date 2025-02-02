@@ -33,7 +33,7 @@ bool board_new(struct Board **board, SDL_Renderer *renderer, unsigned rows,
 
     board_set_scale(b, b->scale);
 
-    if (!board_reset(b, b->mine_count, true)) {
+    if (!board_reset(b, true)) {
         return false;
     }
 
@@ -121,8 +121,7 @@ void board_free_arrays(struct Board *b) {
     }
 }
 
-bool board_reset(struct Board *b, int mine_count, bool full_reset) {
-    b->mine_count = mine_count;
+bool board_reset(struct Board *b, bool full_reset) {
 
     if (full_reset) {
         board_free_arrays(b);
@@ -345,7 +344,7 @@ bool board_mouse_up(struct Board *b, int x, int y, Uint8 button) {
                     board_check_won(b);
                 }
                 if (b->first_turn && b->game_status != 0) {
-                    if (!board_reset(b, b->mine_count, false)) {
+                    if (!board_reset(b, false)) {
                         return false;
                     }
                 } else {
