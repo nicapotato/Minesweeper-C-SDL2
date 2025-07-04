@@ -1,6 +1,11 @@
 #include "game.h"
 #include "init_sdl.h"
 
+#ifdef WASM_BUILD
+// Global game pointer for Emscripten main loop
+static struct Game *g_game = NULL;
+#endif
+
 bool game_create_string(char **game_str, const char *new_str);
 void game_set_title(struct Game *g);
 bool game_reset(struct Game *g);
@@ -16,6 +21,25 @@ bool game_mouse_up(struct Game *g, int x, int y, Uint8 button);
 bool game_events(struct Game *g);
 void game_update(struct Game *g);
 void game_draw(const struct Game *g);
+
+#ifdef WASM_BUILD
+// Main loop function for Emscripten
+void game_main_loop(void) {
+    if (!g_game || !g_game->is_running) {
+        emscripten_cancel_main_loop();
+        return;
+    }
+
+    if (!game_events(g_game)) {
+        g_game->is_running = false;
+        emscripten_cancel_main_loop();
+        return;
+    }
+
+    game_draw(g_game);
+    game_update(g_game);
+}
+#endif
 
 bool game_new(struct Game **game) {
     *game = calloc(1, sizeof(struct Game));
@@ -401,18 +425,28 @@ void game_draw(const struct Game *g) {
 }
 
 bool game_run(struct Game *g) {
+#ifdef WASM_BUILD
+    // Set global game pointer for Emscripten main loop
+    g_game = g;
+    
+    // Use Emscripten's main loop instead of traditional while loop
+    // This runs at 60 FPS (0 = use browser's requestAnimationFrame)
+    emscripten_set_main_loop(game_main_loop, 0, 1);
+    
+    return true;
+#else
+    // Traditional game loop for native builds
     while (g->is_running) {
-
         if (!game_events(g)) {
             return false;
         }
 
         game_draw(g);
-
         game_update(g);
 
         SDL_Delay(16);
     }
 
     return true;
+#endif
 }
